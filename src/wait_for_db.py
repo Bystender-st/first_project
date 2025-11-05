@@ -1,4 +1,5 @@
 import time
+
 import psycopg2
 from psycopg2 import OperationalError
 
@@ -12,7 +13,7 @@ def wait_for_db():
                 user="hotel_user",
                 password="hotel_password",
                 host="db",
-                port="5432"
+                port="5432",
             )
             conn.close()
             print("✅ Database is ready!")
