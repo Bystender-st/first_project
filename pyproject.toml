@@ -12,7 +12,8 @@ dependencies = [
     "djangorestframework (>=3.16.1,<4.0.0)",
     "psycopg2-binary (>=2.9.11,<3.0.0)",
     "python-dotenv (>=1.2.1,<2.0.0)",
-    "drf-spectacular (>=0.29.0,<0.30.0)"
+    "drf-spectacular (>=0.29.0,<0.30.0)",
+    "drf-yasg (>=1.21.11,<2.0.0)"
 ]
 
 
