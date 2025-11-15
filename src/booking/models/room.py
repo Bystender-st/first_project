@@ -9,6 +9,7 @@ class Room(models.Model):
     capacity = models.PositiveIntegerField(default=1)
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     is_available = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.hotel.name} - Room {self.number}"

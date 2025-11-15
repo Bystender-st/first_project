@@ -156,7 +156,7 @@ SWAGGER_SETTINGS = {
             "type": "apiKey",
             "name": "Authorization",
             "in": "header",
-            "description": "Введите токен без кавычек и скобок:<access_token>",
+            "description": "Введите токен в виде:Bearer <access_token>",
         }
     },
     "USE_SESSION_AUTH": False,

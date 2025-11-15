@@ -6,7 +6,11 @@ from .room import Room
 
 class Booking(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="bookings"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="bookings",
+        null=True,
+        blank=True,
     )
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="bookings")
     start_date = models.DateField()
