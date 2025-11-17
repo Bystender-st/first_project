@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
+*.pytest_cache/
 
 #Environment
 .env
@@ -13,3 +14,12 @@ postgres_data/
 db.sqlite3
 media/
 staticfiles/
+
+# Docker
+*.log
+
+# Editors / IDE
+.idea/
+.vscode/
+*.swp
+*.swo
