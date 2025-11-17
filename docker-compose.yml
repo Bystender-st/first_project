@@ -25,6 +25,18 @@ services:
       - .env
     depends_on:
       - db
+  tests:
+    build: .
+    working_dir: /app/src
+    command: bash -c "python wait_for_db.py && python manage.py migrate --noinput && pytest -q"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - db
+    environment:
+      POSTGRES_TEST_DB: ${POSTGRES_TEST_DB}
 
 volumes:
   postgres_data:

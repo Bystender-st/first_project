@@ -13,5 +13,6 @@ class RoomSerializer(serializers.ModelSerializer):
             "capacity",
             "price_per_night",
             "is_available",
+            "created_at",
         ]
-        read_only_fields = ["id"]
+        read_only_fields = ["id", "created_at"]

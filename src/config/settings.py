@@ -105,7 +105,8 @@ DATABASES = {
         "PORT": os.getenv("POSTGRES_PORT"),
     }
 }
-
+if os.getenv("PYTEST_CURRENT_TEST"):
+    DATABASES["default"]["NAME"] = os.getenv("POSTGRES_TEST_DB", "hotel_test")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
