@@ -1,3 +1,4 @@
+import os
 import time
 
 import psycopg2
@@ -5,21 +6,28 @@ from psycopg2 import OperationalError
 
 
 def wait_for_db():
-    """Пробует подключиться к Postgres, пока тот не станет доступен."""
+    """Ждёт, пока Postgres станет доступен, используя переменные окружения."""
+
+    dbname = os.getenv("POSTGRES_DB")
+    user = os.getenv("POSTGRES_USER")
+    password = os.getenv("POSTGRES_PASSWORD")
+    host = os.getenv("POSTGRES_HOST", "db")  # fallback
+    port = os.getenv("POSTGRES_PORT", "5432")
+
     while True:
         try:
             conn = psycopg2.connect(
-                dbname="hotel_db",
-                user="hotel_user",
-                password="hotel_password",
-                host="db",
-                port="5432",
+                dbname=dbname,
+                user=user,
+                password=password,
+                host=host,
+                port=port,
             )
             conn.close()
             print("✅ Database is ready!")
             break
-        except OperationalError:
-            print("⏳ Waiting for database to be ready...")
+        except OperationalError as e:
+            print(f"⏳ Waiting for database… ({e})")
             time.sleep(2)
 
 
