@@ -35,6 +35,11 @@ jobs:
       DJANGO_SETTINGS_MODULE: config.settings
       PYTHONPATH: src
 
+      #Django
+      DJANGO_DEBUG: False
+      DJANGO_SECRET_KEY: ci-test-secret
+      DJANGO_ALLOWED_HOSTS: localhost,127.0.0.1
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
