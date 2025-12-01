@@ -4,6 +4,7 @@ from booking.views.booking_views import (
     BookingCreateView,
     BookingDeleteView,
     BookingListView,
+    BookingUpdateView,
 )
 from booking.views.hotel_views import HotelCreateView, HotelDeleteView, HotelListView
 from booking.views.room_views import RoomCreateView, RoomDeleteView, RoomListView
@@ -21,6 +22,9 @@ urlpatterns = [
     path("bookings/create/", BookingCreateView.as_view(), name="booking-create"),
     path(
         "bookings/delete/<int:pk>/", BookingDeleteView.as_view(), name="booking-delete"
+    ),
+    path(
+        "bookings/update/<int:pk>/", BookingUpdateView.as_view(), name="booking-update"
     ),
     path("bookings/list/", BookingListView.as_view(), name="booking-list"),
 ]

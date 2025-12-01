@@ -2,7 +2,8 @@ from django.shortcuts import get_object_or_404
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -13,11 +14,12 @@ from booking.serializers.booking_serializers import BookingSerializer
 class BookingListView(generics.ListAPIView):
     """
     Список броней с фильтрацией по hotel_id, room_id
-    и сортировкой по дате начала (asc/desc).
+    и сортировкой по дате начала (asc/desc). С пагинацией.
     """
 
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = BookingSerializer
+    pagination_class = PageNumberPagination
 
     @swagger_auto_schema(
         manual_parameters=[
@@ -46,7 +48,7 @@ class BookingListView(generics.ListAPIView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        qs = Booking.objects.all()
+        qs = Booking.objects.filter(user=self.request.user)  # ➝ только свои брони
 
         room_id = self.request.query_params.get("room_id")
         hotel_id = self.request.query_params.get("hotel_id")
@@ -63,13 +65,9 @@ class BookingListView(generics.ListAPIView):
 
 
 class BookingCreateView(generics.CreateAPIView):
-    """
-    Создание брони (room_id, start_date, end_date)
-    """
-
     queryset = Booking.objects.all()
     serializer_class = BookingSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         request_body=BookingSerializer,
@@ -80,18 +78,28 @@ class BookingCreateView(generics.CreateAPIView):
         return super().post(request, *args, **kwargs)
 
 
-class BookingDeleteView(APIView):
-    """
-    Удаление брони по ID
-    """
+class BookingUpdateView(generics.UpdateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer
+    permission_classes = [IsAuthenticated]
 
-    permission_classes = [AllowAny]
+    @swagger_auto_schema(
+        request_body=BookingSerializer,
+        responses={200: BookingSerializer},
+        operation_description="Обновление существующей брони",
+    )
+    def put(self, request, *args, **kwargs):
+        return super().put(request, *args, **kwargs)
+
+
+class BookingDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
         responses={200: "Booking deleted"},
         operation_description="Удаление бронирования по ID",
     )
     def delete(self, request, pk):
-        booking = get_object_or_404(Booking, pk=pk)
+        booking = get_object_or_404(Booking, pk=pk, user=request.user)
         booking.delete()
         return Response({"detail": "Booking deleted"}, status=status.HTTP_200_OK)

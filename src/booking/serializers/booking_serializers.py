@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.db.models import Q
 from rest_framework import serializers
 
@@ -25,11 +27,13 @@ class BookingSerializer(serializers.ModelSerializer):
     def validate(self, data):
         start = data["start_date"]
         end = data["end_date"]
+        room_id = data["room_id"]
+
+        if start < date.today():
+            raise serializers.ValidationError("Cannot book a past date.")
 
         if end <= start:
             raise serializers.ValidationError("end_date must be after start_date")
-
-        room_id = data["room_id"]
 
         if not Room.objects.filter(pk=room_id).exists():
             raise serializers.ValidationError({"room_id": "Room not found"})
@@ -51,6 +55,17 @@ class BookingSerializer(serializers.ModelSerializer):
         room = Room.objects.get(pk=validated_data.pop("room_id"))
         request = self.context.get("request")
 
-        user = request.user if request and request.user.is_authenticated else None
+        if not request or not request.user.is_authenticated:
+            raise serializers.ValidationError("Authentication is required.")
+
+        user = request.user
 
         return Booking.objects.create(room=room, user=user, **validated_data)
+
+    def update(self, instance, validated_data):
+        room = Room.objects.get(pk=validated_data.pop("room_id", instance.room.id))
+        instance.room = room
+        instance.start_date = validated_data.get("start_date", instance.start_date)
+        instance.end_date = validated_data.get("end_date", instance.end_date)
+        instance.save()
+        return instance

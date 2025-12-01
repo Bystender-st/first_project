@@ -9,8 +9,8 @@ class Booking(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="bookings",
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
     )
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name="bookings")
     start_date = models.DateField()
