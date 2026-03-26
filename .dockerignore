@@ -1,0 +1,25 @@
+.venv
+venv
+env
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+
+# IDE
+.idea
+.vscode
+
+# Tests cache
+.pytest_cache/
+.ruff_cache/
+
+# Git
+.git/
+.gitignore
+
+# Docker
+docker-compose.yml
+docker-compose.override.yml
+Dockerfile
